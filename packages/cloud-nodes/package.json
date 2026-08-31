@@ -1,0 +1,24 @@
+{
+  "name": "@thinglinks/cloud-nodes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reserved workspace for future official ThingLinks Cloud Node-RED integrations.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "thinglinks",
+    "iot",
+    "cloud"
+  ],
+  "files": [
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": "^22.18.0 || ^24.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mqttsnet/thinglinks-node-red.git",
+    "directory": "packages/cloud-nodes"
+  }
+}

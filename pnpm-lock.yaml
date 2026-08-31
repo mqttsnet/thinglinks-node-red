@@ -1,0 +1,19 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  packages/cloud-nodes: {}
+
+  packages/common: {}
+
+  packages/edge-nodes:
+    dependencies:
+      '@thinglinks/node-red-common':
+        specifier: workspace:0.1.0
+        version: link:../common
