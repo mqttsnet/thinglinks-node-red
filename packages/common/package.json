@@ -1,0 +1,24 @@
+{
+  "name": "@thinglinks/node-red-common",
+  "version": "0.1.0",
+  "description": "Shared runtime for official ThingLinks Node-RED packages.",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "main": "tl-common.js",
+  "files": [
+    "tl-common.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": "^22.18.0 || ^24.12.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mqttsnet/thinglinks-node-red.git",
+    "directory": "packages/common"
+  }
+}

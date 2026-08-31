@@ -1,0 +1,41 @@
+{
+  "name": "@thinglinks/edge-nodes",
+  "version": "1.0.1",
+  "description": "Official Node-RED nodes for ThingLinks Edge device inventory, tags, and platform uplink.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "thinglinks",
+    "node-red",
+    "iot",
+    "edge-computing",
+    "industrial-iot"
+  ],
+  "files": [
+    "*.js",
+    "*.html",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": "^22.18.0 || ^24.12.0"
+  },
+  "dependencies": {
+    "@thinglinks/node-red-common": "workspace:0.1.0"
+  },
+  "node-red": {
+    "version": ">=5.0.4 <6",
+    "nodes": {
+      "tl-device": "tl-device.js",
+      "tl-tag": "tl-tag.js",
+      "tl-uplink": "tl-uplink.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mqttsnet/thinglinks-node-red.git",
+    "directory": "packages/edge-nodes"
+  }
+}
