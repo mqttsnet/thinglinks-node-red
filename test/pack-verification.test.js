@@ -37,9 +37,9 @@ test('real pnpm tarballs contain only the intended package boundaries', () => {
 
   assert.equal(result.packageManager, 'pnpm@10.32.1');
   assert.deepEqual(result.packages.map(({ name, version }) => [name, version]), [
-    ['@thinglinks/node-red-common', '0.1.0'],
-    ['@thinglinks/edge-nodes', '1.0.1'],
-    ['@thinglinks/cloud-nodes', '0.1.0'],
+    ['@mqttsnet/thinglinks-node-red-common', '0.0.1'],
+    ['@mqttsnet/thinglinks-edge-nodes', '0.0.1'],
+    ['@mqttsnet/thinglinks-cloud-nodes', '0.0.1'],
   ]);
 
   const common = result.packages[0];
@@ -52,7 +52,7 @@ test('real pnpm tarballs contain only the intended package boundaries', () => {
   ]);
 
   const edge = result.packages[1];
-  assert.equal(edge.commonDependency, '0.1.0');
+  assert.equal(edge.commonDependency, '0.0.1');
   assert.deepEqual(edge.nodeTypes, ['tl-device', 'tl-tag', 'tl-uplink']);
   assert.deepEqual(edge.files, [
     'package/LICENSE',

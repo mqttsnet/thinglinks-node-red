@@ -8,15 +8,15 @@ import { pathToFileURL } from 'node:url';
 const targets = {
   'edge-nodes': {
     directory: 'packages/edge-nodes',
-    packageName: '@thinglinks/edge-nodes',
+    packageName: '@mqttsnet/thinglinks-edge-nodes',
   },
   'cloud-nodes': {
     directory: 'packages/cloud-nodes',
-    packageName: '@thinglinks/cloud-nodes',
+    packageName: '@mqttsnet/thinglinks-cloud-nodes',
   },
   common: {
     directory: 'packages/common',
-    packageName: '@thinglinks/node-red-common',
+    packageName: '@mqttsnet/thinglinks-node-red-common',
   },
 };
 

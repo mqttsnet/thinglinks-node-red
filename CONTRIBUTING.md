@@ -17,7 +17,7 @@ pnpm run audit
 
 改动应保持 common 为普通运行时依赖、Edge 仅注册 `tl-device`/`tl-tag`/`tl-uplink`，并保持 Node-RED `>=5.0.4 <6` 兼容范围。提交前检查打包内容、包元数据和现有测试；不要凭文档或手工启动将 Cloud 骨架或发布流程宣称为已实现/已发布。
 
-Edge 对 common 的仓内声明必须是精确 `workspace:0.1.0`，发布 tgz 中必须转换成精确 `0.1.0`。发布门禁从 `pnpm pack --json` 解析唯一 tarball 和 integrity，内容检查、真容器与未来发布必须消费同一文件，禁止再次从源码打包。当前工作流没有 publish 或 OIDC 权限；首次引导发布、npm trusted publisher 绑定和 tag ruleset 均需维护者单独确认。
+Edge 对 common 的仓内声明必须是精确 `workspace:0.0.1`，发布 tgz 中必须转换成精确 `0.0.1`。发布门禁从 `pnpm pack --json` 解析唯一 tarball 和 integrity，内容检查、真容器与未来发布必须消费同一文件，禁止再次从源码打包。当前工作流没有 publish 或 OIDC 权限；首次引导发布、npm trusted publisher 绑定和 tag ruleset 均需维护者单独确认。
 
 ## 安全与凭证
 
@@ -25,4 +25,4 @@ Edge 对 common 的仓内声明必须是精确 `workspace:0.1.0`，发布 tgz �
 
 ## Pull request
 
-说明受影响的包、验证命令及尚未完成的边界。`@thinglinks` scope 的 npm 发布权限尚未确认；本轮不要执行或宣称 npm 发布。
+说明受影响的包、验证命令及尚未完成的边界。未经发布门禁与维护者确认，不要执行或宣称 npm 发布；Cloud 包保持 private，不能随 common/Edge 一起发布。

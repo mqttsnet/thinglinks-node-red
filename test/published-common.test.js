@@ -14,15 +14,15 @@ test('a package declaring common cannot pass until a satisfying public version e
     expectedIntegrity: 'sha512-common',
     lookup: async (specification) => {
       lookups.push(specification);
-      return { integrity: 'sha512-common', version: '0.1.0' };
+      return { integrity: 'sha512-common', version: '0.0.1' };
     },
   });
 
-  assert.deepEqual(lookups, ['@thinglinks/node-red-common@0.1.0']);
+  assert.deepEqual(lookups, ['@mqttsnet/thinglinks-node-red-common@0.0.1']);
   assert.deepEqual(result, {
-    dependency: '@thinglinks/node-red-common@0.1.0',
+    dependency: '@mqttsnet/thinglinks-node-red-common@0.0.1',
     publishedIntegrity: 'sha512-common',
-    publishedVersion: '0.1.0',
+    publishedVersion: '0.0.1',
     required: true,
   });
 });
@@ -34,7 +34,7 @@ test('published common integrity must match the tarball used by the consumer mat
     checkPublishedCommon('packages/edge-nodes', {
       rootDirectory: root,
       expectedIntegrity: 'sha512-local',
-      lookup: async () => ({ integrity: 'sha512-registry', version: '0.1.0' }),
+      lookup: async () => ({ integrity: 'sha512-registry', version: '0.0.1' }),
     }),
     /registry integrity does not match the verified tarball/,
   );
@@ -50,7 +50,7 @@ test('missing published common fails the dependent package release gate', async 
         throw new Error('E404');
       },
     }),
-    /Publish @thinglinks\/node-red-common@0\.1\.0 before the dependent package/,
+    /Publish @mqttsnet\/thinglinks-node-red-common@0\.0\.1 before the dependent package/,
   );
 });
 

@@ -4,7 +4,7 @@
  * 部署时把设备登记到平台台账；有消息经过时刷新在线状态。
  * 消息**原样透传**，本节点不改 payload —— 它是旁路登记，不是数据处理环节。
  */
-const { report } = require('@thinglinks/node-red-common');
+const { report } = require('@mqttsnet/thinglinks-node-red-common');
 
 module.exports = function (RED) {
   function TlDeviceNode(config) {

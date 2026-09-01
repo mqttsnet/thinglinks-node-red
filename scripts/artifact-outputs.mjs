@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
-const commonPackage = '@thinglinks/node-red-common';
-const edgePackage = '@thinglinks/edge-nodes';
+const commonPackage = '@mqttsnet/thinglinks-node-red-common';
+const edgePackage = '@mqttsnet/thinglinks-edge-nodes';
 
 export function selectArtifactOutputs(metadata, targetPackage) {
   const target = metadata.packages.find((pkg) => pkg.name === targetPackage);

@@ -69,17 +69,17 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/npm-pack"
           case "${{ steps.target.outputs.package }}" in
-            "@thinglinks/cloud-nodes")
+            "@mqttsnet/thinglinks-cloud-nodes")
               node scripts/verify-packs.mjs --json \
                 --output "$RUNNER_TEMP/npm-pack" \
                 --package "${{ steps.target.outputs.package }}" \
                 > "$RUNNER_TEMP/npm-pack/metadata.json"
               ;;
-            "@thinglinks/node-red-common"|"@thinglinks/edge-nodes")
+            "@mqttsnet/thinglinks-node-red-common"|"@mqttsnet/thinglinks-edge-nodes")
               node scripts/verify-packs.mjs --json \
                 --output "$RUNNER_TEMP/npm-pack" \
-                --package "@thinglinks/node-red-common" \
-                --package "@thinglinks/edge-nodes" \
+                --package "@mqttsnet/thinglinks-node-red-common" \
+                --package "@mqttsnet/thinglinks-edge-nodes" \
                 > "$RUNNER_TEMP/npm-pack/metadata.json"
               ;;
             *)
@@ -104,7 +104,7 @@ jobs:
           --expected-integrity "${{ steps.artifacts.outputs.common-integrity }}"
 
       - name: Verify the same common and Edge tarballs in Node-RED
-        if: steps.target.outputs.package != '@thinglinks/cloud-nodes'
+        if: steps.target.outputs.package != '@mqttsnet/thinglinks-cloud-nodes'
         run: >-
           node scripts/verify-node-red-container.mjs
           --common-tarball "${{ steps.artifacts.outputs.common-tarball }}"

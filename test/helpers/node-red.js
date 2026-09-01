@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 
 function loadNode(runtimePath) {
-  const commonPath = require.resolve('@thinglinks/node-red-common', {
+  const commonPath = require.resolve('@mqttsnet/thinglinks-node-red-common', {
     paths: [path.dirname(runtimePath)],
   });
   delete require.cache[commonPath];

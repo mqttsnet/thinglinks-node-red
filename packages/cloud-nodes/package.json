@@ -1,6 +1,6 @@
 {
-  "name": "@thinglinks/cloud-nodes",
-  "version": "0.1.0",
+  "name": "@mqttsnet/thinglinks-cloud-nodes",
+  "version": "0.0.1",
   "private": true,
   "description": "Reserved workspace for future official ThingLinks Cloud Node-RED integrations.",
   "license": "Apache-2.0",

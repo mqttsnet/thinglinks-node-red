@@ -7,7 +7,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
-const commonPackage = '@thinglinks/node-red-common';
+const commonPackage = '@mqttsnet/thinglinks-node-red-common';
 const publicRegistry = 'https://registry.npmjs.org';
 
 async function npmLookup(specification) {
