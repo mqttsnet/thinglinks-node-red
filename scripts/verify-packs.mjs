@@ -16,9 +16,9 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
 export const supportedPackages = [
-  '@thinglinks/node-red-common',
-  '@thinglinks/edge-nodes',
-  '@thinglinks/cloud-nodes',
+  '@mqttsnet/thinglinks-node-red-common',
+  '@mqttsnet/thinglinks-edge-nodes',
+  '@mqttsnet/thinglinks-cloud-nodes',
 ];
 
 function run(command, args, options = {}) {
@@ -58,7 +58,7 @@ export function inspectArchive(archivePath, packResult) {
   const manifest = JSON.parse(run('tar', ['-xOzf', archivePath, 'package/package.json']));
 
   return {
-    commonDependency: manifest.dependencies?.['@thinglinks/node-red-common'],
+    commonDependency: manifest.dependencies?.['@mqttsnet/thinglinks-node-red-common'],
     files,
     hasNodeRedMetadata: Object.hasOwn(manifest, 'node-red'),
     integrity: `sha512-${createHash('sha512').update(archive).digest('base64')}`,

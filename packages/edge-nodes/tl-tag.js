@@ -4,7 +4,7 @@
  * 取值优先级：`msg.payload` 是对象且含本点位标识时取那一项，否则整个 payload 当作值。
  * 这样既支持一次采多点（payload 是对象），也支持单点直连。
  */
-const { report } = require('@thinglinks/node-red-common');
+const { report } = require('@mqttsnet/thinglinks-node-red-common');
 
 module.exports = function (RED) {
   function TlTagNode(config) {

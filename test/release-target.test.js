@@ -10,9 +10,9 @@ const script = path.join(root, 'scripts/release-target.mjs');
 
 test('supported tags select one exact package and expose workflow outputs', () => {
   const cases = [
-    ['edge-nodes@1.0.1', '@thinglinks/edge-nodes', 'packages/edge-nodes', '1.0.1'],
-    ['cloud-nodes@0.1.0', '@thinglinks/cloud-nodes', 'packages/cloud-nodes', '0.1.0'],
-    ['common@0.1.0', '@thinglinks/node-red-common', 'packages/common', '0.1.0'],
+    ['edge-nodes@0.0.1', '@mqttsnet/thinglinks-edge-nodes', 'packages/edge-nodes', '0.0.1'],
+    ['cloud-nodes@0.0.1', '@mqttsnet/thinglinks-cloud-nodes', 'packages/cloud-nodes', '0.0.1'],
+    ['common@0.0.1', '@mqttsnet/thinglinks-node-red-common', 'packages/common', '0.0.1'],
   ];
 
   for (const [tag, packageName, directory, version] of cases) {
@@ -22,13 +22,13 @@ test('supported tags select one exact package and expose workflow outputs', () =
 });
 
 test('tag version mismatch fails instead of packing a different version', () => {
-  const result = spawnSync(process.execPath, [script, 'edge-nodes@1.0.2'], {
+  const result = spawnSync(process.execPath, [script, 'edge-nodes@0.0.2'], {
     cwd: root,
     encoding: 'utf8',
   });
 
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /does not match package version 1\.0\.1/);
+  assert.match(result.stderr, /does not match package version 0\.0\.1/);
 });
 
 test('unknown prefixes and non-semver versions fail closed', () => {
@@ -47,7 +47,7 @@ test('a matching semver prerelease selects the next dist-tag', async () => {
     const directory = path.join(temporaryRoot, 'packages/edge-nodes');
     mkdirSync(directory, { recursive: true });
     writeFileSync(path.join(directory, 'package.json'), JSON.stringify({
-      name: '@thinglinks/edge-nodes',
+      name: '@mqttsnet/thinglinks-edge-nodes',
       version: '1.1.0-rc.1+build.5',
     }));
     const { resolveReleaseTarget } = await import('../scripts/release-target.mjs');
@@ -55,7 +55,7 @@ test('a matching semver prerelease selects the next dist-tag', async () => {
     assert.deepEqual(resolveReleaseTarget('edge-nodes@1.1.0-rc.1+build.5', temporaryRoot), {
       directory: 'packages/edge-nodes',
       distTag: 'next',
-      packageName: '@thinglinks/edge-nodes',
+      packageName: '@mqttsnet/thinglinks-edge-nodes',
       version: '1.1.0-rc.1+build.5',
     });
   } finally {

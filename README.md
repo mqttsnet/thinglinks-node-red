@@ -4,11 +4,11 @@ Official Node-RED integrations for ThingLinks Edge and Cloud, maintained as inde
 
 ## Package boundaries
 
-- `@thinglinks/node-red-common@0.1.0`: shared reporting runtime. It is a normal runtime dependency and intentionally has no `node-red` package field, so it is not a node directory entry and must not be added to `allowList`.
-- `@thinglinks/edge-nodes@1.0.1`: the current runtime package. It contains exactly `tl-device`, `tl-tag`, and `tl-uplink`.
-- `@thinglinks/cloud-nodes@0.1.0`: private reservation/skeleton only. Cloud nodes are not implemented; no seven-node set is implied.
+- `@mqttsnet/thinglinks-node-red-common@0.0.1`: shared reporting runtime. It is a normal runtime dependency and intentionally has no `node-red` package field, so it is not a node directory entry and must not be added to `allowList`.
+- `@mqttsnet/thinglinks-edge-nodes@0.0.1`: the current runtime package. It contains exactly `tl-device`, `tl-tag`, and `tl-uplink`.
+- `@mqttsnet/thinglinks-cloud-nodes@0.0.1`: private reservation/skeleton only. Cloud nodes are not implemented; no seven-node set is implied.
 
-The current round is not published. Permission to publish the `@thinglinks` scope is still to be confirmed.
+The `@mqttsnet` organization owns the package scope. Common and Edge are public release targets; Cloud remains private and unpublished.
 
 ## Requirements
 
@@ -22,13 +22,13 @@ Install the common runtime first, then the Edge nodes package:
 
 ```sh
 cd ~/.node-red
-npm install @thinglinks/node-red-common
-npm install @thinglinks/edge-nodes
+npm install @mqttsnet/thinglinks-node-red-common
+npm install @mqttsnet/thinglinks-edge-nodes
 ```
 
-These packages are not published in this round. Until they are available from the registry, run `pnpm pack:check` in this repository, create the package tgz files with filtered `pnpm pack` commands, and install the common tgz before the Edge tgz.
+For local artifact verification, run `pnpm pack:check` and install the generated common tgz before the Edge tgz.
 
-For a deny-by-default Node-RED installation, `allowList` affects both package installation and startup loading. Allow `@thinglinks/edge-nodes`; do not allow or list `@thinglinks/node-red-common`. The common package remains in the dependency tree but does not appear in the Node-RED node directory.
+For a deny-by-default Node-RED installation, `allowList` affects both package installation and startup loading. Allow `@mqttsnet/thinglinks-edge-nodes`; do not allow or list `@mqttsnet/thinglinks-node-red-common`. The common package remains in the dependency tree but does not appear in the Node-RED node directory.
 
 ## Edge Manager connection
 
@@ -60,7 +60,7 @@ Each package keeps its own version. A tag selects exactly one workspace package:
 
 The tag version must equal the selected package manifest. Common must be published before any Edge or Cloud version that declares it as a dependency. The current workflow validates and packs artifacts only; it does not run `npm publish`.
 
-Internal workspace dependencies use an exact `workspace:0.1.0` source range. `pnpm pack` must convert that to the exact public dependency `0.1.0`; both forms are tested. The tag workflow creates each release tarball once, records its absolute path and SHA-512 integrity, feeds the same common/Edge tarballs to the real-container gate, and uploads the exact target tarball. For an Edge release, the locally verified common integrity must equal npm's public `dist.integrity` for exact `0.1.0`. A future publish step must consume that artifact and must never repack from the source directory.
+Internal workspace dependencies use an exact `workspace:0.0.1` source range. `pnpm pack` must convert that to the exact public dependency `0.0.1`; both forms are tested. The tag workflow creates each release tarball once, records its absolute path and SHA-512 integrity, feeds the same common/Edge tarballs to the real-container gate, and uploads the exact target tarball. For an Edge release, the locally verified common integrity must equal npm's public `dist.integrity` for exact `0.0.1`. A future publish step must consume that artifact and must never repack from the source directory.
 
 The repository intentionally grants no OIDC permission while it is dry-run only. After each public package has been bootstrapped by an authorized maintainer, configure npm trusted publishing for owner `mqttsnet`, repository `thinglinks-node-red`, and the exact workflow filename `publish-package.yml`; then revoke the bootstrap credential. Only the future publish job should receive `id-token: write`, and stable/prerelease versions must use `latest`/`next` respectively. Protect all three tag prefixes and require the tagged commit to be reachable from protected `main`.
 

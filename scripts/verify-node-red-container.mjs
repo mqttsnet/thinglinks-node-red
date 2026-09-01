@@ -19,8 +19,8 @@ import { pathToFileURL } from 'node:url';
 import { inspectArchive, packPackages } from './verify-packs.mjs';
 
 const image = 'nodered/node-red:5.0.4-24-minimal';
-const edgePackage = '@thinglinks/edge-nodes';
-const commonPackage = '@thinglinks/node-red-common';
+const edgePackage = '@mqttsnet/thinglinks-edge-nodes';
+const commonPackage = '@mqttsnet/thinglinks-node-red-common';
 const expectedEdgeTypes = ['tl-device', 'tl-tag', 'tl-uplink'];
 const expectedManagerKinds = ['device-status', 'devices', 'tags', 'uplink', 'values'];
 const expectedCommonPaths = ['devices', 'devices/device-01/status', 'tags', 'uplink', 'values'];
@@ -142,6 +142,16 @@ function dockerResourceExists(kind, name) {
   }
 }
 
+export function removeTemporaryRoot(directory, repairPermissions = () => {}) {
+  try {
+    rmSync(directory, { force: true, recursive: true });
+  } catch (error) {
+    if (error?.code !== 'EACCES' && error?.code !== 'EPERM') throw error;
+    repairPermissions(directory);
+    rmSync(directory, { force: true, recursive: true });
+  }
+}
+
 function resolveArtifacts(packsDirectory, args) {
   const commonTarball = valueFor('--common-tarball', args);
   const edgeTarball = valueFor('--edge-tarball', args);
@@ -161,10 +171,10 @@ function resolveArtifacts(packsDirectory, args) {
   const common = artifacts.find((artifact) => artifact.name === commonPackage);
   const edge = artifacts.find((artifact) => artifact.name === edgePackage);
   if (!common || !edge) throw new Error('Acceptance requires common and Edge tarballs');
-  assert.equal(common.version, '0.1.0');
+  assert.equal(common.version, '0.0.1');
   assert.equal(common.hasNodeRedMetadata, false);
-  assert.equal(edge.version, '1.0.1');
-  assert.equal(edge.commonDependency, '0.1.0');
+  assert.equal(edge.version, '0.0.1');
+  assert.equal(edge.commonDependency, '0.0.1');
   assert.deepEqual(edge.nodeTypes, expectedEdgeTypes);
   return { common, edge };
 }
@@ -343,7 +353,7 @@ function installFromRegistry(networkName, runtimeImage, dataDirectory) {
     'cd /data',
     '&& npm install --save-exact --ignore-scripts --omit=dev --no-audit --no-fund',
     '--registry=http://registry:4873',
-    `${edgePackage}@1.0.1`,
+    `${edgePackage}@0.0.1`,
     '&& chmod -R a+rwX /data',
   ].join(' ');
   docker([
@@ -356,22 +366,22 @@ function installFromRegistry(networkName, runtimeImage, dataDirectory) {
 
 function verifyInstalledDependency(dataDirectory, artifacts) {
   const packageJson = JSON.parse(readFileSync(path.join(dataDirectory, 'package.json'), 'utf8'));
-  assert.equal(packageJson.dependencies[edgePackage], '1.0.1');
+  assert.equal(packageJson.dependencies[edgePackage], '0.0.1');
   assert.equal(Object.hasOwn(packageJson.dependencies, commonPackage), false);
 
   const installedEdge = JSON.parse(readFileSync(
-    path.join(dataDirectory, 'node_modules/@thinglinks/edge-nodes/package.json'), 'utf8',
+    path.join(dataDirectory, 'node_modules/@mqttsnet/thinglinks-edge-nodes/package.json'), 'utf8',
   ));
   const installedCommon = JSON.parse(readFileSync(
-    path.join(dataDirectory, 'node_modules/@thinglinks/node-red-common/package.json'), 'utf8',
+    path.join(dataDirectory, 'node_modules/@mqttsnet/thinglinks-node-red-common/package.json'), 'utf8',
   ));
   assert.equal(installedEdge.version, artifacts.edge.version);
   assert.equal(installedEdge.dependencies[commonPackage], artifacts.common.version);
   assert.equal(installedCommon.version, artifacts.common.version);
 
   const lockfile = JSON.parse(readFileSync(path.join(dataDirectory, 'package-lock.json'), 'utf8'));
-  assert.equal(lockfile.packages['node_modules/@thinglinks/edge-nodes'].integrity, artifacts.edge.integrity);
-  assert.equal(lockfile.packages['node_modules/@thinglinks/node-red-common'].integrity, artifacts.common.integrity);
+  assert.equal(lockfile.packages['node_modules/@mqttsnet/thinglinks-edge-nodes'].integrity, artifacts.edge.integrity);
+  assert.equal(lockfile.packages['node_modules/@mqttsnet/thinglinks-node-red-common'].integrity, artifacts.common.integrity);
 }
 
 function startNodeRed(names, networkName, runtimeImage, dataDirectory, resultsDirectory) {
@@ -567,6 +577,7 @@ async function runAcceptance(args = []) {
   const networkName = `tl-node-red-net-${suffix}`;
   let diagnosticLogs = '';
   let completed = false;
+  let runtimeImage;
 
   mkdirSync(packsDirectory);
   mkdirSync(dataDirectory);
@@ -579,7 +590,7 @@ async function runAcceptance(args = []) {
     docker(['pull', image]);
     const imageId = docker(['image', 'inspect', '--format', '{{.Id}}', image]);
     const repoDigests = JSON.parse(docker(['image', 'inspect', '--format', '{{json .RepoDigests}}', image]));
-    const runtimeImage = imageId;
+    runtimeImage = imageId;
     const artifacts = resolveArtifacts(packsDirectory, args);
     writeFileSync(registryConfigPath, `${JSON.stringify(registryConfig(artifacts), null, 2)}\n`);
 
@@ -609,7 +620,7 @@ async function runAcceptance(args = []) {
       image,
       imageId,
       repoDigests,
-      registryInstall: { commonVersion: '0.1.0', edgeVersion: '1.0.1', networkInternal: true },
+      registryInstall: { commonVersion: '0.0.1', edgeVersion: '0.0.1', networkInternal: true },
       positive,
       managerFailure,
       invalidConfiguration,
@@ -634,7 +645,14 @@ async function runAcceptance(args = []) {
     removeContainer(names.manager);
     removeContainer(names.registry);
     removeNetwork(networkName);
-    rmSync(temporaryRoot, { force: true, recursive: true });
+    removeTemporaryRoot(temporaryRoot, (directory) => {
+      if (!runtimeImage) throw new Error(`Cannot repair permissions for ${directory} before the runtime image is available`);
+      docker([
+        'run', '--rm', '--user', 'root',
+        '--volume', `${directory}:/cleanup`,
+        '--entrypoint', 'sh', runtimeImage, '-c', 'chmod -R a+rwX /cleanup',
+      ]);
+    });
     if (completed) {
       const residual = [names.nodeRed, names.manager, names.registry]
         .filter((name) => dockerResourceExists('container', name));
@@ -651,7 +669,7 @@ async function main() {
     return;
   }
   process.stdout.write(`✓ image pulled and fixed for this run: ${result.imageId}\n`);
-  process.stdout.write('✓ private registry: Edge installed by name with exact common@0.1.0 integrity\n');
+  process.stdout.write('✓ private registry: Edge installed by name with exact common@0.0.1 integrity\n');
   process.stdout.write(`✓ positive routes: ${result.positive.managerKinds.join(', ')}; common executed\n`);
   process.stdout.write('✓ Manager HTTP 503: five reports failed without blocking downstream flow\n');
   process.stdout.write('✓ invalid configuration: node errors remained separate from Manager failures\n');

@@ -1,6 +1,6 @@
 {
-  "name": "@thinglinks/edge-nodes",
-  "version": "1.0.1",
+  "name": "@mqttsnet/thinglinks-edge-nodes",
+  "version": "0.0.1",
   "description": "Official Node-RED nodes for ThingLinks Edge device inventory, tags, and platform uplink.",
   "license": "Apache-2.0",
   "keywords": [
@@ -20,7 +20,7 @@
     "node": "^22.18.0 || ^24.12.0"
   },
   "dependencies": {
-    "@thinglinks/node-red-common": "workspace:0.1.0"
+    "@mqttsnet/thinglinks-node-red-common": "workspace:0.0.1"
   },
   "node-red": {
     "version": ">=5.0.4 <6",

@@ -14,6 +14,6 @@ importers:
 
   packages/edge-nodes:
     dependencies:
-      '@thinglinks/node-red-common':
-        specifier: workspace:0.1.0
+      '@mqttsnet/thinglinks-node-red-common':
+        specifier: workspace:0.0.1
         version: link:../common

@@ -1,6 +1,6 @@
 {
-  "name": "@thinglinks/node-red-common",
-  "version": "0.1.0",
+  "name": "@mqttsnet/thinglinks-node-red-common",
+  "version": "0.0.1",
   "description": "Shared runtime for official ThingLinks Node-RED packages.",
   "license": "Apache-2.0",
   "type": "commonjs",

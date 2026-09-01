@@ -25,8 +25,8 @@ test('root pins the approved Node.js and pnpm workspace contract', () => {
 test('common is a public plain runtime package, never a Node-RED node package', () => {
   const pkg = manifest('packages/common');
 
-  assert.equal(pkg.name, '@thinglinks/node-red-common');
-  assert.equal(pkg.version, '0.1.0');
+  assert.equal(pkg.name, '@mqttsnet/thinglinks-node-red-common');
+  assert.equal(pkg.version, '0.0.1');
   assert.equal(pkg.license, 'Apache-2.0');
   assert.equal(pkg.type, 'commonjs');
   assert.equal(pkg.main, 'tl-common.js');
@@ -38,11 +38,11 @@ test('common is a public plain runtime package, never a Node-RED node package', 
 test('edge package exposes exactly the three migrated nodes and a normal common dependency', () => {
   const pkg = manifest('packages/edge-nodes');
 
-  assert.equal(pkg.name, '@thinglinks/edge-nodes');
-  assert.equal(pkg.version, '1.0.1');
+  assert.equal(pkg.name, '@mqttsnet/thinglinks-edge-nodes');
+  assert.equal(pkg.version, '0.0.1');
   assert.equal(pkg.publishConfig.access, 'public');
   assert.equal(pkg.keywords.includes('node-red'), true);
-  assert.equal(pkg.dependencies['@thinglinks/node-red-common'], 'workspace:0.1.0');
+  assert.equal(pkg.dependencies['@mqttsnet/thinglinks-node-red-common'], 'workspace:0.0.1');
   assert.equal(pkg['node-red'].version, '>=5.0.4 <6');
   assert.deepEqual(pkg['node-red'].nodes, {
     'tl-device': 'tl-device.js',
@@ -55,8 +55,8 @@ test('edge package exposes exactly the three migrated nodes and a normal common 
 test('cloud package is a private skeleton without fabricated Node-RED entries', () => {
   const pkg = manifest('packages/cloud-nodes');
 
-  assert.equal(pkg.name, '@thinglinks/cloud-nodes');
-  assert.equal(pkg.version, '0.1.0');
+  assert.equal(pkg.name, '@mqttsnet/thinglinks-cloud-nodes');
+  assert.equal(pkg.version, '0.0.1');
   assert.equal(pkg.private, true);
   assert.equal(Object.hasOwn(pkg, 'node-red'), false);
   assert.equal(Object.hasOwn(pkg, 'publishConfig'), false);
@@ -69,5 +69,5 @@ test('all package names use one scope', () => {
     manifest('packages/cloud-nodes').name,
   ];
 
-  assert.deepEqual(new Set(names.map((name) => name.split('/')[0])), new Set(['@thinglinks']));
+  assert.deepEqual(new Set(names.map((name) => name.split('/')[0])), new Set(['@mqttsnet']));
 });

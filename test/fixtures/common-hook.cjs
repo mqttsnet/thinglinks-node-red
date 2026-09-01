@@ -9,7 +9,7 @@ const wrapped = Symbol.for('thinglinks.node-red-common.acceptance-wrapped');
 
 Module._load = function load(request, parent, isMain) {
   const runtime = originalLoad.call(this, request, parent, isMain);
-  if (request !== '@thinglinks/node-red-common' || runtime[wrapped]) return runtime;
+  if (request !== '@mqttsnet/thinglinks-node-red-common' || runtime[wrapped]) return runtime;
 
   const originalReport = runtime.report;
   runtime.report = async function report(node, reportPath, body) {

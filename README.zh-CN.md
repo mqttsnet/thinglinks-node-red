@@ -4,11 +4,11 @@ ThingLinks Edge 与 Cloud 的官方 Node-RED 集成，按包独立版本维护�
 
 ## 三个包的职责边界
 
-- `@thinglinks/node-red-common@0.1.0`：共享上报运行时。它是普通运行时依赖，刻意不设置 `node-red` 字段，因此不会成为节点目录条目，也不能加入 `allowList`。
-- `@thinglinks/edge-nodes@1.0.1`：当前运行时包，且只注册 `tl-device`、`tl-tag`、`tl-uplink` 三个节点。
-- `@thinglinks/cloud-nodes@0.1.0`：仅为未来 Cloud 集成保留的私有骨架，Cloud 节点尚未实现，不代表存在七个节点。
+- `@mqttsnet/thinglinks-node-red-common@0.0.1`：共享上报运行时。它是普通运行时依赖，刻意不设置 `node-red` 字段，因此不会成为节点目录条目，也不能加入 `allowList`。
+- `@mqttsnet/thinglinks-edge-nodes@0.0.1`：当前运行时包，且只注册 `tl-device`、`tl-tag`、`tl-uplink` 三个节点。
+- `@mqttsnet/thinglinks-cloud-nodes@0.0.1`：仅为未来 Cloud 集成保留的私有骨架，Cloud 节点尚未实现，不代表存在七个节点。
 
-本轮尚未发布；`@thinglinks` scope 的发布权限仍待确认。
+`@mqttsnet` Organization 持有包 scope。common 与 Edge 是公开发布目标；Cloud 保持 private 且不发布。
 
 ## 环境要求
 
@@ -22,13 +22,13 @@ ThingLinks Edge 与 Cloud 的官方 Node-RED 集成，按包独立版本维护�
 
 ```sh
 cd ~/.node-red
-npm install @thinglinks/node-red-common
-npm install @thinglinks/edge-nodes
+npm install @mqttsnet/thinglinks-node-red-common
+npm install @mqttsnet/thinglinks-edge-nodes
 ```
 
-本轮尚未发布到 registry。当前应先在本仓运行 `pnpm pack:check`，再用带精确 `--filter` 的 `pnpm pack` 生成各包 `.tgz`，并按 common → edge 的顺序安装。
+本地验证发布物时，运行 `pnpm pack:check`，并按 common → edge 的顺序安装生成的 tgz。
 
-Node-RED 的 deny-by-default 配置中，`allowList` 同时影响安装和启动加载：只允许 `@thinglinks/edge-nodes`；不要把 `@thinglinks/node-red-common` 加入 `allowList`，也不要把它当节点包列出。common 仍会存在于依赖树中，但不会出现在 Node-RED 节点目录。
+Node-RED 的 deny-by-default 配置中，`allowList` 同时影响安装和启动加载：只允许 `@mqttsnet/thinglinks-edge-nodes`；不要把 `@mqttsnet/thinglinks-node-red-common` 加入 `allowList`，也不要把它当节点包列出。common 仍会存在于依赖树中，但不会出现在 Node-RED 节点目录。
 
 ## Edge Manager 连接
 
@@ -60,7 +60,7 @@ Manager 根据 token 反查实例；请求体不得携带或冒充实例身份�
 
 tag 版本必须与目标 `package.json.version` 一致。任何声明依赖 common 的 Edge/Cloud 版本都必须等 common 先发布。本轮工作流只做校验、dry-run 与打包，不执行 `npm publish`。
 
-仓内依赖使用精确 `workspace:0.1.0`，`pnpm pack` 后必须转换成精确公共依赖 `0.1.0`，两种形态都有测试。tag 工作流只生成一次发布 tgz，记录绝对路径与 SHA-512 integrity，再把同一份 common/edge tgz 交给真容器门禁，最终上传同一目标包。发布 Edge 时，本地验收的 common integrity 还必须与 npm 上精确 `0.1.0` 的公开 `dist.integrity` 一致；未来发布步骤只能消费这份 artifact，禁止从源码目录重新 pack。
+仓内依赖使用精确 `workspace:0.0.1`，`pnpm pack` 后必须转换成精确公共依赖 `0.0.1`，两种形态都有测试。tag 工作流只生成一次发布 tgz，记录绝对路径与 SHA-512 integrity，再把同一份 common/edge tgz 交给真容器门禁，最终上传同一目标包。发布 Edge 时，本地验收的 common integrity 还必须与 npm 上精确 `0.0.1` 的公开 `dist.integrity` 一致；未来发布步骤只能消费这份 artifact，禁止从源码目录重新 pack。
 
 当前仅 dry-run，因此工作流刻意不授予 OIDC 权限。每个公共包由有权限的维护者完成首次引导发布后，应在 npm 绑定 Owner `mqttsnet`、仓库 `thinglinks-node-red` 与精确工作流文件名 `publish-package.yml`，随后撤销引导凭证。未来只给实际 publish job 增加 `id-token: write`；稳定版/预发布版分别使用 `latest`/`next`。三个 tag 前缀应启用 ruleset，且 tag 提交必须可从受保护 `main` 到达。
 

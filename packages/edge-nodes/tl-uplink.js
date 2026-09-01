@@ -8,7 +8,7 @@
  *
  * 本节点只负责把数据交给 Manager；批量、缓存、续传在 Manager 侧做。
  */
-const { report } = require('@thinglinks/node-red-common');
+const { report } = require('@mqttsnet/thinglinks-node-red-common');
 
 module.exports = function (RED) {
   function TlUplinkNode(config) {
